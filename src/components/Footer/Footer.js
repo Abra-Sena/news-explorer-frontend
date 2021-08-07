@@ -14,7 +14,7 @@ function Footer() {
         <p className="footer__copyright">© 2021 Emissa, Powered by News API</p>
 
         <div className="footer__elements">
-          <div className="footer__links footer__links_text">
+          <div className="footer__links-text">
             <Link className="footer__link" to='/'>Home</Link>
             <a
               href="https://practicum.yandex.com/web"
@@ -25,7 +25,7 @@ function Footer() {
             </a>
           </div>
 
-          <div className="footer__links">
+          <div className="footer__links-image">
             <a
               href="https://www.github.com/Abra-Sena"
               target="_blank"

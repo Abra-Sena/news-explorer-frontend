@@ -31,7 +31,7 @@ function NewsCard({
   return (
     <li className="element">
       <div className="element__buttons">
-        <span className={ `${iconHovered ? "element__button-text" : "text_hiden" }`}>
+        <span className={ `${iconHovered ? "element__button-text" : "element__button-text_hidden" }`}>
           { currentPath ? deleteText : bookmarkText }
         </span>
 
@@ -47,7 +47,7 @@ function NewsCard({
       </div>
 
       <div className="element__buttons" style={{width: '90%'}}>
-        <span className={ `${currentPath ? "element__button-text" : "text_hiden" }`}>
+        <span className={ `${currentPath ? "element__button-text" : "element__button-text_hidden" }`}>
           { currentPath ? keyword : '' }
         </span>
 

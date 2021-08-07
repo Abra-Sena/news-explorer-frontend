@@ -20,8 +20,6 @@
   margin: 32px auto 24px;
 
   border-radius: 50%;
-  /* object-fit: contain; */
-  /* object-position: 50% 50%; */
 }
 
 .about__elements {
@@ -54,7 +52,6 @@
 @media screen and (min-width: 768px) {
   .about__content {
     flex-direction: row;
-    /* justify-content: space-between; */
     align-content: flex-start;
   }
 
@@ -80,7 +77,7 @@
 
   .about__image {
     width: 380px;
-    margin: 3% 0 auto;
+    margin: 8% 0 auto;
   }
 
   .about__elements {

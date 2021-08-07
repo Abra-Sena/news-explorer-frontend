@@ -4,6 +4,7 @@ import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-d
 // import ProtectedRoute from '../ProtectedRoute';
 import LoginForm from '../LoginForm/LoginForm';
 import RegisterForm from '../RegisterForm/RegisterForm';
+import InfoPopup from '../InfoPopup/InfoPopup';
 import Main from '../Main/Main';
 import SavedNews from "../SavedNews/SavedNews";
 import Header from '../Header/Header';
@@ -23,6 +24,7 @@ function App() {
   const [isServerError, setIsServerError] = React.useState(false);
   const [isLoginPopupOpen, setLoginPopupOpen] = React.useState(false);
   const [isRegisterPopupOpen, setRegisterPopupOpen] = React.useState(false);
+  const [isSuccess, setSucess] = React.useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
@@ -42,6 +44,7 @@ function App() {
   function closeAllPopups() {
     setLoginPopupOpen(false);
     setRegisterPopupOpen(false)
+    setSucess(false);
     console.log('popup closed!')
   }
   function handlePopupClose(evt) {
@@ -82,6 +85,9 @@ function App() {
     setRegisterPopupOpen(true);
   }
 
+  function handleRegisterSuccess() {
+    setSucess(true);
+  }
   // function handleSignoutClick() {
 
   // }
@@ -100,16 +106,21 @@ function App() {
 
   function handlePopupSwitch() {
     console.log('click should switch forms');
-    // setSwitchPopup(true);
 
     if(isRegisterPopupOpen) {
       setRegisterPopupOpen(false)
       setLoginPopupOpen(true);
-    console.log('form switched from "register" to "login"');
+      console.log('form switched from "register" to "login"');
     } else if(isLoginPopupOpen) {
       setLoginPopupOpen(false);
       setRegisterPopupOpen(true);
-    console.log('form switched from "login" to "register"');
+      console.log('form switched from "login" to "register"');
+    } else if(isSuccess) {
+      console.log('registration succeed');
+      setSucess(false);
+      // setRegisterPopupOpen(false)
+      setLoginPopupOpen(true);
+      console.log('form switched from "register succeed" to "login"');
     }
   }
 
@@ -173,10 +184,19 @@ function App() {
         closeAllPopups={closeAllPopups}
         isRegisterPopupOpen={isRegisterPopupOpen}
         handleRegisterClick={handleRegisterClick}
+        handleRegisterSuccess={handleRegisterSuccess}
         switch={handlePopupSwitch}
         onClose={handlePopupClose}
         handleFormReset={handleFormReset}
         handleSearchChange={handleSearchChange}
+      />
+
+      <InfoPopup
+        closeAllPopups={closeAllPopups}
+        isSuccess={isSuccess}
+        handleRegisterSuccess={handleRegisterSuccess}
+        onClose={handlePopupClose}
+        switch={handlePopupSwitch}
       />
     </CurrentUserContext.Provider>
   );

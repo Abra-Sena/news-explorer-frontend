@@ -5,10 +5,13 @@ import './NotFounded.css';
 
 function NotFounded() {
   return (
-    <>
-      <img src={sadFace} alt='sad-face' />
-      <h3 className="notfound__title">Nothing found</h3>
-    </>
+    <div className="notfound">
+      <div className="notfound__container">
+        <img src={sadFace} alt='sad-face' className="notfound__image" />
+        <h3 className="notfound__title">Nothing found</h3>
+        <p className="notfound__paragraph">Sorry, but nothing matched your search terms.</p>
+      </div>
+    </div>
   )
 }
 

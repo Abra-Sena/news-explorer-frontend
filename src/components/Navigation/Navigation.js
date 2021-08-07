@@ -4,10 +4,10 @@ import React from 'react';
 import { useRouteMatch, NavLink } from 'react-router-dom';
 // import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import logout from '../../images/logout.svg';
-import closeIconW from '../../images/close-icon.svg';
-import closeIconB from '../../images/close-icon-black.svg';
-import menuIconW from '../../images/menu-white.svg';
-import menuIconB from '../../images/menu-black.svg'
+import closeIconW from '../../images/close-white.png';
+import closeIconB from '../../images/close-black.png';
+import menuIconW from '../../images/menu-black.png';
+import menuIconB from '../../images/menu-white.png'
 
 import './Navigation.css';
 
@@ -37,12 +37,14 @@ function Navigation(props) {
     setMobileNavOpen(true);
   }
   const closeMobileNav = (evt) => {
-    console.log('request to close mobile nav');
+    if(screenWidth < 700) {
+      console.log('request to close mobile nav');
 
-    if(evt.target !== evt.currentTarget) return;
-    if(evt.which === 27) setMobileNavOpen(false);
+      if(evt.target !== evt.currentTarget) return;
+      if(evt.which === 27) setMobileNavOpen(false);
 
-    setMobileNavOpen(false);
+      setMobileNavOpen(false);
+    }
   }
 
   React.useEffect(() => {

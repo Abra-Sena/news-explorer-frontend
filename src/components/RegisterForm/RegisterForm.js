@@ -13,6 +13,7 @@ function RegisterForm(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    props.handleRegisterSuccess();
 
     // props.handleRegister(email, password);
     // if(localStorage.getItem('jwt')) {

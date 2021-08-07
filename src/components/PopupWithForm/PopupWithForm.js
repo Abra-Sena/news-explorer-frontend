@@ -29,7 +29,7 @@ function PopupWithForm(props) {
           onReset={props.handleFormReset}
           onSubmit={props.onSubmit}
           switch={props.handlePopupSwitch}
-          className={`form popup__form form_${props.name}`}
+          className={`form popup__form`}
         >
           <h3 className="form__title">{"Sign " + props.title}</h3>
 
@@ -41,13 +41,13 @@ function PopupWithForm(props) {
             type="submit"
             aria-label="auth"
             disabled={!props.isSuccess}
-            // onClick={buttonClick}
+            onClick={props.switch}
             className="form__submit " /*className={props.isSuccess ? 'form__submit' : 'form__submit_disabled'}*/
           >
             {"Sign " + props.title}
           </button>
           <button className="form__link" onClick={props.switch}> or
-            <span className="form__link_active">{linkText}</span>
+            <span className="form__link form__link_active">{linkText}</span>
           </button>
           <button type="button" aria-label="close" className="form__close" onClick={props.onClose}></button>
         </form>

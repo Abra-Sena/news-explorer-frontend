@@ -1,6 +1,6 @@
 // a presentational component that displays information about the author
 import React from 'react';
-import Avatar from '../../images/my-avatar.svg';
+import Avatar from '../../images/my-avatar.png';
 import './About.css';
 
 function About() {

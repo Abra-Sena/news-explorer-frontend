@@ -34,7 +34,7 @@ function SavedNews(props) {
           </span>
         </div>
 
-        <div className="saved__articles">
+        <div className="elements saved__articles">
           <NewsCardList />
         </div>
       </section>

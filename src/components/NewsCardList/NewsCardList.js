@@ -4,11 +4,11 @@ import NewsCard from '../NewsCard/NewsCard';
 import NotFounded from '../NotFounded/NotFounded';
 import Preloader from '../Preloader/Preloader';
 // mock data images
-import image1 from '../../images/image1.svg';
-import image2 from '../../images/image2.svg';
-import image3 from '../../images/image3.svg';
-import image4 from '../../images/image4.svg';
-import image5 from '../../images/image5.svg';
+import image1 from '../../images/image1.png';
+import image2 from '../../images/image2.png';
+import image3 from '../../images/image3.png';
+import image4 from '../../images/image4.png';
+import image5 from '../../images/image5.png';
 // import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './NewsCardList.css';

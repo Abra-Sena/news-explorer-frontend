@@ -17,12 +17,18 @@ body, html {
 
 #root {
   position: relative;
-  min-width: 320px;
   width: 100%;
+  min-width: 320px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0;
 }
 
+@media screen and (min-width: 1441px) {
+  #root {
+    border: 1px solid #D1D2D6;
+  }
+}
 /* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

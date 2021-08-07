@@ -1,9 +1,11 @@
 /* eslint-disable no-restricted-globals */
 // the components of the main page
 import React from 'react';
-import Navigation from '../Navigation/Navigation';
 import About from '../About/About';
+import Navigation from '../Navigation/Navigation';
 import NewsCardList from '../NewsCardList/NewsCardList';
+import NotFounded from '../NotFounded/NotFounded';
+import Preloader from '../Preloader/Preloader';
 // import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './Main.css';
@@ -25,7 +27,12 @@ function Main(props) {
         handleSignoutClick={props.handleSignoutClick}
       />
 
+
       <section className="search">
+        {/* <NotFounded /> */}
+
+        {/* <Preloader /> */}
+
         <div className="elements">
           <h2 className="elements__title">Search results</h2>
           <NewsCardList />
