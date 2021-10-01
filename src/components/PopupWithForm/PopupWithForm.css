@@ -75,7 +75,7 @@
   border: 0;
 }
 
-/* .form__field_error {
+.form__field_error {
   font-size: 12px;
   line-height: 15px;
 
@@ -85,7 +85,7 @@
 
   color: #FF0000;
   outline: none;
-} */
+}
 
 .form__input {
   width: 100%;
@@ -219,8 +219,8 @@
   }
 
   .form__close {
-    right: -10%;
-    top: -12%;
+    right: -7%;
+    top: -7%;
     height: 40px;
     width: 40px;
   }

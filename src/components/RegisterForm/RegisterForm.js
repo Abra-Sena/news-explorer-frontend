@@ -5,32 +5,19 @@ import PopupWithForm from '../PopupWithForm/PopupWithForm';
 import './RegisterForm.css';
 
 function RegisterForm(props) {
-  const [ email, setEmail ] = React.useState('');
-  const [ password, setPassword ] = React.useState('');
-  const [ username, setUsername ] = React.useState('');
+  // const errorMessage = props.duplicateUser ? 'Email is already taken' : 'Email or Password Invalid!';
 
-  // const history = useHistory();
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    props.handleRegisterSuccess();
-
-    // props.handleRegister(email, password);
-    // if(localStorage.getItem('jwt')) {
-    //   history.push('/');
-    // }
-  }
 
   return (
     <PopupWithForm
       id="register"
       name="register"
-      title="up"
-      isOpen={props.isRegisterPopupOpen}
+      title="Sign up"
+      isOpen={props.isOpen}
+      isValid={props.isValid}
       onClose={props.onClose}
-      onSubmit={handleSubmit}
-      closeAllPopups={props.closeAllPopups}
-      switch={props.switch}
+      onSubmit={props.handleRegister}
+      onSwitch={props.onSwitch}
     >
       <label className="form__label">Email</label>
       <input
@@ -39,24 +26,27 @@ function RegisterForm(props) {
         name="email"
         className="form__input form__input_type_email"
         placeholder="Enter Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
+        value={props.values.email}
+        onChange={props.handleFormChange}
         required
       />
-      <span id="email-error" className="form__field form__field_error"></span>
+      <span id="email-error" className="form__field form__field_error">{props.errors['email']?.substring(0, 50)}</span>
 
       <label className="form__label">Password</label>
       <input
         id="password-register"
         type="password"
+        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" //at least 1 uppercase, 1 lowercase, 1 number
+        title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number."
         name="password"
-        className="form__input form__input_type_password"
         placeholder="Enter Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
+        className="form__input form__input_type_password"
+        value={props.values.password}
+        onChange={props.handleFormChange}
+        minLength={6}
         required
       />
-      <span id="password-error" className="form__field form__field_error"></span>
+      <span id="password-error" className="form__field form__field_error">{props.errors['password']?.substring(0, 50)}</span>
 
       <label className="form__label">Username</label>
       <input
@@ -64,16 +54,15 @@ function RegisterForm(props) {
         type="text"
         name="username"
         placeholder="Enter your username"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
         className="form__input form__input_type_username"
+        value={props.values.username}
+        onChange={props.handleFormChange}
+        minLength={4}
         required
       />
-      <span id="username-error" className="form__field form__field_error"></span>
+      <span id="username-error" className="form__field form__field_error">{props.errors['username']?.substring(0, 50)}</span>
 
-      <span id="register-error" className="register__form_error">
-        {props.wrongInputs && 'Email or Password Invalid!'}
-      </span>
+      <span id="register-error" className="register__form_error">{props.duplicateUser && 'Email is already taken'}</span>
     </PopupWithForm>
   )
 }

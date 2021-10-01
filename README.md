@@ -1,3 +1,8 @@
+TO DOs:
+* Request to save article (returning 401 error code -> Unauthorized on isLoggedin = true)
+* Request to delete article (returning 400 error code -> Bad request)
+* Test everything on remote server
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
