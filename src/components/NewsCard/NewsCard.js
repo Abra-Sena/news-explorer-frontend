@@ -1,6 +1,7 @@
 // the news card component
 import React from 'react';
 import imageNotFound from '../../images/no-image-available.png';
+
 import './NewsCard.css';
 
 function NewsCard(props) {
@@ -8,7 +9,7 @@ function NewsCard(props) {
   const [ iconClicked, setIconClicked ] = React.useState(false);
   const bookmarkText = "Sign in to save articles";
   const deleteText = "Remove from saved";
-  const noImage = props.article.urlToImage === null;
+  const buttonWidth = props.savedNews ? '90%' : null
 
   function convertDate(date) {
     const options = {
@@ -21,16 +22,24 @@ function NewsCard(props) {
   }
 
   function handleClick() {
+    console.log('current article: ', props.article)
     setIconClicked(true);
     props.bookMarkClick(props.article);
   }
 
+
   return (
     <li className="element">
-      <div className="element__buttons">
+      <div className="element__buttons" style={{width: buttonWidth}}>
+        <span className={ `${props.savedNews ? "element__button-text" : "element__button-text_hidden" }`}>
+          { props.savedNews ? props.article.keyword :
+            (!props.savedNews && props.isLoggedIn) ? props.searchRequest : ''
+          }
+        </span>
+
         { !props.isLoggedIn &&
           <span className={ `${iconHovered ? "element__button-text" : "element__button-text_hidden" }`}>
-            { props.savedNews ? deleteText : bookmarkText }
+            { props.savedNews && props.article.isSaved ? deleteText : bookmarkText }
           </span>
         }
 
@@ -43,15 +52,6 @@ function NewsCard(props) {
           onMouseOver={() => setIconHover(true)}
           onMouseLeave={() => setIconHover(false)}
         />
-      </div>
-
-      <div className="element__buttons" style={{width: '90%'}}>
-        <span className={ `${props.savedNews ? "element__button-text" : "element__button-text_hidden" }`}>
-          { props.savedNews ? props.article.keyword :
-            (!props.savedNews && props.isLoggedIn) ? props.searchRequest : ''
-          }
-        </span>
-
         <button
           style={{visibility: props.savedNews ? 'visible' : 'hidden'}}
           type="button"
@@ -65,11 +65,9 @@ function NewsCard(props) {
 
 
       <img
-        // className="element__photo"
-        className={noImage ? "element__photo element__photo_notfound" : "element__photo"}
-        src={noImage ? imageNotFound : props.article.urlToImage}
+        className="element__photo"
+        src={props.article.urlToImage === null ? imageNotFound : props.article.urlToImage}
         alt={props.article.title}
-        onClick={handleClick}
       />
       <div className="element__details">
         <p className="element__date">{convertDate(props.article.publishedAt)}</p>

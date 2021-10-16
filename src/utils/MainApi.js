@@ -1,81 +1,54 @@
 // description to request to  my API
-import { BASE_URL } from "./Constants";
+import { BASE_URL, token } from "./Constants";
 
-const checkResult = (res) => {
-  return (res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`));
-}
 
-export const register = (email, password, name) => {
-  return fetch(`${BASE_URL}/signup`, {
-    method: 'POST',
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email, password, name })
-  })
-}
+class MainApi {
+  constructor({baseUrl, headers}) {
+    this._baseUrl = baseUrl;
+    this._headers = headers;
+  }
 
-export const authorize = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password })
-  })
-}
-
-export const getUserInfo = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    }
-  })
-  .then((res) => checkResult(res))
-  .then((results) => results.data)
-}
-
-export const getArticles = (token) => {
-  return fetch(`${BASE_URL}/articles`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  })
-  .then(res => checkResult(res))
-}
-
-export const saveArticle = ({title, description, url, urlToImage, publishedAt, keyword, source}, token) => {
-  return fetch(`${BASE_URL}/articles`, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify({
-      title, description, url, urlToImage, publishedAt, keyword, source
+  getUserInfo() {
+    return fetch(`${this._baseUrl}/users/me`, {
+      method: "GET",
+      headers: this._headers
     })
-  })
-  .then((res) => checkResult(res))
+    .then((res) => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+    .then((results) => results.data)
+  }
+
+  getArticles() {
+    return fetch(`${this._baseUrl}/articles`, {
+      method: "GET",
+      headers: this._headers
+    })
+    .then(res => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+  }
+
+  saveArticle(article) {
+    return fetch(`${this._baseUrl}/articles`, {
+      method: "POST",
+      headers: this._headers,
+      // body: JSON.stringify(article)
+      body: JSON.stringify(article)
+    })
+    .then((res) => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+  }
+
+  deleteArticle(articleId) {
+    return fetch(`${this._baseUrl}/articles/${articleId}`, {
+      method: "DELETE",
+      headers: this._headers
+    })
+    .then(res => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+  }
 }
 
-export const deleteArticle = (articleId, token) => {
-  return fetch(`${BASE_URL}/articles/${articleId}`, {
-    method: "DELETE",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  })
-  .then(res => checkResult(res))
-}
-
+export const mainApi = new MainApi({
+  baseUrl: BASE_URL,
+  headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    authorization: `Bearer ${token}`
+  }
+});

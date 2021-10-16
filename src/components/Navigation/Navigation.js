@@ -49,7 +49,6 @@ function Navigation(props) {
   }
 
   const openSavedNewsPage = () => {
-    console.log('request to go to saved news page')
     if(!props.savedNews && !props.isLoggedIn) props.handleLoginClick();
   }
 

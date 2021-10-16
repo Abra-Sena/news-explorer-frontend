@@ -8,11 +8,10 @@ function NewsCardList(props) {
       {
         props.articles
           .slice(0, props.savedNews ? props.articles.length : props.articlesCount)
-          .map((card, id) =>
+          .map((article, id) =>
             <NewsCard
-              // key={card._id ? card._id : props.articles.indexOf(card)}
               key={id}
-              article={card}
+              article={article}
               isLoggedIn={props.isLoggedIn}
               bookMarkClick={props.bookMarkClick}
               savedNews={props.savedNews}

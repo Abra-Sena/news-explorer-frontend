@@ -12,7 +12,8 @@ import Navigation from '../Navigation/Navigation';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import NewsApi from '../../utils/NewApi';
-import * as api from '../../utils/MainApi';
+import {mainApi} from '../../utils/MainApi';
+import * as auth from '../../utils/auth';
 import { BASE_NEWS_URL } from '../../utils/Constants';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
@@ -42,6 +43,15 @@ function App() {
   const [values, setValues] = React.useState({email: '', password: '', username: ''});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
+
+  // const mainApi = new MainApi({
+  //   baseUrl: BASE_URL,
+  //   headers: {
+  //     "Accept": "application/json",
+  //     "Content-Type": "application/json",
+  //     authorization: `Bearer ${token}`
+  //   }
+  // });
 
   const newsApi = new NewsApi({
     baseUrl: BASE_NEWS_URL,
@@ -97,12 +107,10 @@ function App() {
       handleLoginClick()
       setSuccessPopup(false)
     }
-    console.log('form switched!')
   }
 
   // Register
   function handleRegisterClick() {
-    console.log('request to open register popup')
     setRegisterPopupOpen(true);
     setLoginPopupOpen(false);
     setWrongInputs(false);
@@ -110,7 +118,7 @@ function App() {
   function handleRegister(e) {
     e.preventDefault();
 
-    api.register(values.email, values.password, values.username)
+    auth.register(values.email, values.password, values.username)
       .then((res) => {
         if(res.status === 409) {
           setDuplicateUser(true);
@@ -135,7 +143,6 @@ function App() {
 
   // Login
   function handleLoginClick() {
-    console.log('request to open login popup')
     setLoginPopupOpen(true);
     setRegisterPopupOpen(false);
     setSuccessPopup(false);
@@ -143,7 +150,7 @@ function App() {
   function handleLogin(e) {
     e.preventDefault();
 
-    api.authorize(values.email, values.password)
+    auth.authorize(values.email, values.password)
       .then((res) => {
         if(res.status === 401) {
           setWrongInputs(true);
@@ -175,32 +182,35 @@ function App() {
   }
 
   // Signout
-   function handleSignoutClick() {
-     unSavedArticles();
-     handleSignOut();
+  function handleSignoutClick() {
+    unSavedArticles();
+    handleSignOut();
   }
   function handleSignOut() {
     localStorage.removeItem('jwt');
     setIsLoggedIn(false);
+    setCurrentUser({});
+    setCards([]);
+    closeAllPopups();
     history.push('/');
   }
 
   // Search requests
-  function checkDuplicates(articles, savedArticles) { // if duplicate found then isaved = true
-    for(let i = 0; i < articles.length; i++) {
-      const result = articles[i];
-      const existingArticle = savedArticles.find((card) =>
-        card.title ===result.title &&
-        card.url === result.url &&
-        card.urlToImage === result.urlToImage &&
-        card.description === result.description
-      );
+  // function checkDuplicates(articles, savedArticles) { // if duplicate found then isaved = true
+  //   for(let i = 0; i < articles.length; i++) {
+  //     const result = articles[i];
+  //     const existingArticle = savedArticles.find((card) =>
+  //       card.title ===result.title &&
+  //       card.url === result.url &&
+  //       card.urlToImage === result.urlToImage &&
+  //       card.description === result.description
+  //     );
 
-      if(existingArticle) articles[i].isSaved = true;
-    }
+  //     if(existingArticle) articles[i].isSaved = true;
+  //   }
 
-    setCards(articles);
-  }
+  //   setCards(articles);
+  // }
   function unSavedArticles() {
     const newCards = cards;
 
@@ -210,29 +220,27 @@ function App() {
     e.preventDefault();
 
     setIsLoading(true);
+    setSearchRequest('');
+    setCards([]);
+
     if(searchRequest.length === 0) {
       setIsLoading(false);
       setServerError('Please enter a word to search');
       return;
     }
-    console.log('topic: ', searchRequest)
+    console.log('topic/keyword: ', searchRequest)
 
     newsApi.searchArticles(searchRequest)
       .then((res) => {
-        if(res.length === 0) setNotFound(true)
+        if(res.length === 0) {
+          setNotFound(true);
+          setIsLoading(false);
+          localStorage.removeItem('setSearchResponse');
+          localStorage.removeItem('searchRequest');
+        }
 
         res.forEach((article) => {
           article.keyword = searchRequest[0].toUpperCase() + searchRequest.slice(1).toLowerCase();
-
-          if(isLoggedIn) {
-            savedArticles.forEach((savedArticle) => {
-              if(checkDuplicates(article, savedArticle)) {
-                article.isSaved = true;
-                article._id = savedArticle._id;
-              }
-              return;
-            });
-          }
         });
 
         return res;
@@ -240,12 +248,11 @@ function App() {
       .then((data) => {
         setArticlesCount(3);
         setCards(data);
-        // setSuccess(true);
         setSearchRequest(searchRequest);
-        localStorage.setItem('searchResult', JSON.stringify(data));
         // checkDuplicates(data, savedArticles);
         setIsLoading(false);
         setServerError('');
+        articleStatus();
       })
       .catch((err) => {
         setServerError('Sorry, something went wrong. There may be a connection issue or the server may be down. Please try again later.');
@@ -275,49 +282,65 @@ function App() {
 
   // Others
   function bookMarkClick(article) {
-    if(!isLoggedIn) return handleLoginClick();
-
-    // if(article.isSaved === true) return handleDeleteClick(article);
-
-    if(!savedNews && isLoggedIn) {
-      console.log(article);
-
+    if(isLoggedIn) {
       if(!article.isSaved) {
-        api.saveArticle(article)
-        .then((data) => {
-          data.isSaved = true;
-          const newArticles = cards.map(a => a === article ? data : a)
-          const newSavedArticles = [...savedArticles, data];
-
-          setSavedArticles(newSavedArticles);
-          setCards(newArticles);
-          localStorage.setItem('searchResult', JSON.stringify(newArticles));
-          localStorage.setItem('savedArticles', JSON.stringify(newSavedArticles));
+        mainApi.saveArticle({
+          keyword: article.keyword,
+          title: article.title,
+          description: article.description,
+          publisedAt: article.publisedAt,
+          source: article.source.name,
+          url: article.url,
+          urlToImage: article.urlToImage
         })
-        .catch(err => console.log(err));
+        .then((res) => setSavedArticles([...savedArticles, res]))
+        .catch((err) => console.log(err));
+      } else {
+        article.isSaved = false;
+        handleDeleteClick(article);
       }
-      else handleDeleteClick(article);
-      return;
     }
-
-    if(savedNews) handleDeleteClick(article);
   }
 
   function handleDeleteClick(article) {
-    api.deleteArticle(article._id, token)
-      .then((res) => {
-        if(res.ok) {
-          article.isSaved = false;
-          const newCards = cards.map(a => a._id === article._id ? article : a);
-          const newSavedArticles = savedArticles.filter((a) => a._id !== article._id);
-          setSavedArticles(newSavedArticles);
-          setCards(newCards);
-          localStorage.setItem('searchResult', JSON.stringify(newCards));
-          localStorage.setItem('savedArticles', JSON.stringify(newSavedArticles));
-        }
+    console.log('saved cards before delete: ', savedArticles);
+
+    if(token) {
+      mainApi.deleteArticle(article._id)
+      .then(() => {
+        const newSavedArticles = savedArticles.filter((a) => a._id !== article._id ? a : null);
+
+        setSavedArticles(newSavedArticles);
       })
       .catch(err => console.log(err))
+
+    }
+
+    console.log('saved cards after delete: ', savedArticles);
   }
+
+  function articleStatus() {
+    const newSearch = [...cards];
+    newSearch.forEach((item) => item.isSaved = false);
+
+    if(savedArticles.length > 0) {
+      newSearch.forEach((item) => {
+        savedArticles.forEach((saved) => {
+          if(saved.url === item.url) {
+            item._id = saved._id;
+            item.isSaved = true;
+          }
+        });
+      });
+      setCards(newSearch);
+    } else {
+      newSearch.forEach((item) => {
+        item.isSaved = false;
+        item._id = null;
+      })
+    }
+  }
+
   function showMoreCards() {
     setArticlesCount(articlesCount + 3);
   }
@@ -327,38 +350,19 @@ function App() {
   // collect user's informations
   React.useEffect(() => {
     if(token) {
-      api.getUserInfo(token)
+      mainApi.getUserInfo(token)
         .then((res) => {
           if(res) {
             setIsLoggedIn(true);
             setCurrentUser({ email: res.email, name: res.name });
-
-            // api.getArticles(token)
-            //   .then((res) => {
-            //     setSavedArticles(res);
-            //   })
-            //   .catch((err) => console.log(err))
           }
         })
         .catch((err) => console.log(err))
     }
-    else setIsLoggedIn(false)
-  }, [token]);
+    else setIsLoggedIn(false);
 
-  // search requests
-  React.useEffect(() => {
-    if(localStorage.getItem('searchResult')) {
-      setCards(JSON.parse(localStorage.getItem('searchResult')))
-    }
-    if(localStorage.getItem('savedArticles')) { // && isLoggedIn
-      setSavedArticles(JSON.parse(localStorage.getItem('savedArticles')));
-    }
-  }, []);
-
-  // retrieve user's articles
-  React.useEffect(() => {
     if(isLoggedIn) {
-      api.getArticles(token)
+      mainApi.getArticles(token)
         .then((res) => {
           setSavedArticles(res);
           localStorage.setItem('savedArticles', JSON.stringify(res));
@@ -367,6 +371,19 @@ function App() {
     }
   }, [isLoggedIn, token]);
 
+  // search requests - retrieve cards from previous session/search
+  React.useEffect(() => {
+    if(localStorage.getItem('searchResult')) {
+      setCards(JSON.parse(localStorage.getItem('searchResult')))
+    }
+    if(localStorage.getItem('savedArticles') && isLoggedIn) { // && isLoggedIn
+      setSavedArticles(JSON.parse(localStorage.getItem('savedArticles')));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    articleStatus();
+  }, [location, savedArticles, isLoggedIn]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -396,8 +413,7 @@ function App() {
             notFound={notFound}
             savedNews={savedNews}
             searchRequest={searchRequest}
-            // success={success}
-            bookMarkClick={(article) => bookMarkClick(article)}
+            bookMarkClick={bookMarkClick}
             showMoreCards={showMoreCards}
             handleLoginClick={handleLoginClick}
             handlePopupClose={handlePopupClose}
@@ -410,10 +426,10 @@ function App() {
           component={SavedNews}
           currentUser={currentUser}
           isLoggedIn={isLoggedIn}
-          cards={cards}
+          cards={savedArticles}
           savedNews={savedNews}
           searchRequest={searchRequest}
-          bookMarkClick={(article) => bookMarkClick(article)}
+          bookMarkClick={bookMarkClick}
         />
         <Route path='*'>
           <Redirect to='/' />

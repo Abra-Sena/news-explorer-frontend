@@ -12,7 +12,7 @@ function SearchForm(props) {
         type="text"
         name="search"
         placeholder="Enter topic"
-        // value={props.searchRequest}
+        value={props.searchRequest ? props.searchRequest : ''} // this fix having false on page refresh
         onChange={props.handleSearchChange}
         className="search__input"
         required

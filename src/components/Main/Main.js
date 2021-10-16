@@ -9,17 +9,21 @@ import Preloader from '../Preloader/Preloader';
 import './Main.css';
 
 function Main(props) {
-  console.log('cards length = ', props.cards.length)
-  console.log('article count = ', props.articlesCount)
   return (
     <main className="content">
       <section className="search">
         <div className="elements">
-          <h2 className="elements__title">Search results</h2>
-          { props.isServerError && <p className="search__error">{props.isServerError}</p> }
+
+          { props.isServerError &&
+            <>
+              <h2 className="elements__title">Search results</h2>
+              <p className="search__error">{props.isServerError}</p>
+            </>
+          }
           { props.cards?.length > 0
             ?
               <>
+                <h2 className="elements__title">Search results</h2>
                 <NewsCardList
                   articles={props.cards}
                   articlesCount={props.articlesCount}

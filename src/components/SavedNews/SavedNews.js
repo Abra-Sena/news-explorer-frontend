@@ -34,7 +34,7 @@ function SavedNews(props) {
                 searchRequest={props.searchRequest}
                 isLoggedIn={props.isLoggedIn}
                 savedNews={props.savedNews}
-                bookMarkClick={props.bookMarkClick}
+                // bookMarkClick={props.bookMarkClick}
               />
             </div>
           : null
