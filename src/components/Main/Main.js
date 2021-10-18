@@ -20,6 +20,10 @@ function Main(props) {
               <p className="search__error">{props.isServerError}</p>
             </>
           }
+
+          {/* { props.isLoading && <Preloader /> }
+          { (props.notFound || props.cards?.length < 0) && <NotFounded /> } */}
+
           { props.cards?.length > 0
             ?
               <>
@@ -37,6 +41,7 @@ function Main(props) {
                   (<button className="elements__more" onClick={props.showMoreCards}>Show more</button>)
                 }
               </>
+            // : null
             : props.isLoading ? <Preloader />
               : (props.notFound || props.cards?.length < 0) ? <NotFounded /> : null
           }

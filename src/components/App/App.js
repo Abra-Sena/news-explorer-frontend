@@ -12,9 +12,9 @@ import Navigation from '../Navigation/Navigation';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import NewsApi from '../../utils/NewApi';
-import {mainApi} from '../../utils/MainApi';
+import MainApi from '../../utils/MainApi';
 import * as auth from '../../utils/auth';
-import { BASE_NEWS_URL } from '../../utils/Constants';
+import { BASE_URL, BASE_NEWS_URL } from '../../utils/Constants';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './App.css';
@@ -43,24 +43,20 @@ function App() {
   const [values, setValues] = React.useState({email: '', password: '', username: ''});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
-
-  // const mainApi = new MainApi({
-  //   baseUrl: BASE_URL,
-  //   headers: {
-  //     "Accept": "application/json",
-  //     "Content-Type": "application/json",
-  //     authorization: `Bearer ${token}`
-  //   }
-  // });
-
+  const mainApi = new MainApi({
+    baseUrl: BASE_URL,
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token}`
+    }
+  });
   const newsApi = new NewsApi({
     baseUrl: BASE_NEWS_URL,
     headers: {
       "Content-Type": "application/json",
-      // authorization: `Bearer ${token}`
     }
   });
-
   const handleFormReset = React.useCallback(
     (
       newValues = {email: '', password: '', username: ''},
@@ -196,21 +192,6 @@ function App() {
   }
 
   // Search requests
-  // function checkDuplicates(articles, savedArticles) { // if duplicate found then isaved = true
-  //   for(let i = 0; i < articles.length; i++) {
-  //     const result = articles[i];
-  //     const existingArticle = savedArticles.find((card) =>
-  //       card.title ===result.title &&
-  //       card.url === result.url &&
-  //       card.urlToImage === result.urlToImage &&
-  //       card.description === result.description
-  //     );
-
-  //     if(existingArticle) articles[i].isSaved = true;
-  //   }
-
-  //   setCards(articles);
-  // }
   function unSavedArticles() {
     const newCards = cards;
 
@@ -220,8 +201,6 @@ function App() {
     e.preventDefault();
 
     setIsLoading(true);
-    setSearchRequest('');
-    setCards([]);
 
     if(searchRequest.length === 0) {
       setIsLoading(false);
@@ -235,12 +214,11 @@ function App() {
         if(res.length === 0) {
           setNotFound(true);
           setIsLoading(false);
-          localStorage.removeItem('setSearchResponse');
-          localStorage.removeItem('searchRequest');
         }
 
         res.forEach((article) => {
           article.keyword = searchRequest[0].toUpperCase() + searchRequest.slice(1).toLowerCase();
+          articleStatus();
         });
 
         return res;
@@ -248,11 +226,6 @@ function App() {
       .then((data) => {
         setArticlesCount(3);
         setCards(data);
-        setSearchRequest(searchRequest);
-        // checkDuplicates(data, savedArticles);
-        setIsLoading(false);
-        setServerError('');
-        articleStatus();
       })
       .catch((err) => {
         setServerError('Sorry, something went wrong. There may be a connection issue or the server may be down. Please try again later.');
@@ -281,42 +254,40 @@ function App() {
   }
 
   // Others
-  function bookMarkClick(article) {
-    if(isLoggedIn) {
-      if(!article.isSaved) {
-        mainApi.saveArticle({
-          keyword: article.keyword,
-          title: article.title,
-          description: article.description,
-          publisedAt: article.publisedAt,
-          source: article.source.name,
-          url: article.url,
-          urlToImage: article.urlToImage
-        })
-        .then((res) => setSavedArticles([...savedArticles, res]))
-        .catch((err) => console.log(err));
-      } else {
-        article.isSaved = false;
-        handleDeleteClick(article);
-      }
+  function bookMarkClick(card) {
+    if(!isLoggedIn) return handleLoginClick();
+
+    if(card.isSaved === true) {
+      return handleDeleteClick(card);
     }
+
+    if(isLoggedIn && !savedNews) {
+      mainApi.saveArticle({
+        keyword: card.keyword,
+        title: card.title,
+        description: card.description,
+        publishedAt: card.publishedAt,
+        source: card.source.name,
+        url: card.url,
+        urlToImage: card.urlToImage
+      })
+      .then((res) => {
+        res.isSaved = true;
+        setSavedArticles([...savedArticles, res])
+      })
+      .catch((err) => console.log(err));
+    } else handleDeleteClick(card);
   }
 
-  function handleDeleteClick(article) {
-    console.log('saved cards before delete: ', savedArticles);
+  function handleDeleteClick(card) {
+    card.isSaved = false;
+    mainApi.deleteArticle(card._id)
+    .then(() => {
+      const newSavedArticles = savedArticles.filter((a) => a._id !== card._id);
 
-    if(token) {
-      mainApi.deleteArticle(article._id)
-      .then(() => {
-        const newSavedArticles = savedArticles.filter((a) => a._id !== article._id ? a : null);
-
-        setSavedArticles(newSavedArticles);
-      })
-      .catch(err => console.log(err))
-
-    }
-
-    console.log('saved cards after delete: ', savedArticles);
+      setSavedArticles(newSavedArticles);
+    })
+    .catch(err => console.log(err));
   }
 
   function articleStatus() {
@@ -345,45 +316,33 @@ function App() {
     setArticlesCount(articlesCount + 3);
   }
 
+  function getSavedArticles() {
+    mainApi.getArticles(token)
+      .then((res) => {
+        setSavedArticles(res);
+      })
+      .catch((err) => console.log(err));
+  }
 
 
-  // collect user's informations
-  React.useEffect(() => {
+  React.useEffect(() => { // collect user's informations
     if(token) {
       mainApi.getUserInfo(token)
         .then((res) => {
           if(res) {
             setIsLoggedIn(true);
-            setCurrentUser({ email: res.email, name: res.name });
+            setCurrentUser(res);
+            getSavedArticles();
           }
+          else setIsLoggedIn(false);
         })
         .catch((err) => console.log(err))
     }
-    else setIsLoggedIn(false);
-
-    if(isLoggedIn) {
-      mainApi.getArticles(token)
-        .then((res) => {
-          setSavedArticles(res);
-          localStorage.setItem('savedArticles', JSON.stringify(res));
-        })
-        .catch((err) => console.log(err))
-    }
-  }, [isLoggedIn, token]);
-
-  // search requests - retrieve cards from previous session/search
-  React.useEffect(() => {
-    if(localStorage.getItem('searchResult')) {
-      setCards(JSON.parse(localStorage.getItem('searchResult')))
-    }
-    if(localStorage.getItem('savedArticles') && isLoggedIn) { // && isLoggedIn
-      setSavedArticles(JSON.parse(localStorage.getItem('savedArticles')));
-    }
-  }, []);
-
+  }, [token]);
   React.useEffect(() => {
     articleStatus();
   }, [location, savedArticles, isLoggedIn]);
+
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

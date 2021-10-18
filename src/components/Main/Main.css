@@ -17,10 +17,11 @@
   font-family: 'Roboto', 'Arial', sans-serif;
   font-style: normal;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 4vh;
   line-height: 133%;
 
   color: #FF0000;
+  text-align: center;
 }
 
 .elements {
@@ -80,6 +81,10 @@
 @media screen and (min-width: 1024px) {
   .search {
     margin: 0 auto;
+  }
+
+  .search__error {
+    font-size: 3vh;
   }
 
   .elements__title {

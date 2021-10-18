@@ -22,8 +22,8 @@ function NewsCard(props) {
   }
 
   function handleClick() {
-    console.log('current article: ', props.article)
-    setIconClicked(true);
+    if(props.isLoggedIn) setIconClicked(true);
+
     props.bookMarkClick(props.article);
   }
 
@@ -73,7 +73,9 @@ function NewsCard(props) {
         <p className="element__date">{convertDate(props.article.publishedAt)}</p>
         <a className="element__title" href={props.article.url} target="blank">{props.article.title}</a>
         <p className="element__paragraph">{props.article.description}</p>
-        <p className="element__keyword">{props.article.source.name}</p>
+        <p className="element__keyword">
+          { props.savedNews ? props.article.source : props.article.source.name }
+        </p>
       </div>
     </li>
   )
