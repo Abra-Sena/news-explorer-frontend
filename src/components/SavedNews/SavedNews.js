@@ -1,5 +1,6 @@
 // the page with saved cards
 import NewsCardList from '../NewsCardList/NewsCardList';
+import { COUNTER } from '../../utils/Constants';
 import './SavedNews.css';
 
 function SavedNews(props) {
@@ -8,7 +9,7 @@ function SavedNews(props) {
     const [first, second] = savedKeywords;
     const { length } = savedKeywords;
 
-    return length > 3 ? `${first}, ${second}, and ${length - 2} others` : savedKeywords.join(', ');
+    return length > COUNTER ? `${first}, ${second}, and ${length - 2} others` : savedKeywords.join(', ');
   }
 
 

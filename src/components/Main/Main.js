@@ -14,7 +14,7 @@ function Main(props) {
       <section className="search">
         <div className="elements">
 
-          { props.isServerError &&
+          { (props.searchRequest && props.isServerError) &&
             <>
               <h2 className="elements__title">Search results</h2>
               <p className="search__error">{props.isServerError}</p>

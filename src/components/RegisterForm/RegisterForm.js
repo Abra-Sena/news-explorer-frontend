@@ -13,6 +13,7 @@ function RegisterForm(props) {
       id="register"
       name="register"
       title="Sign up"
+      errors={props.errors}
       isOpen={props.isOpen}
       isValid={props.isValid}
       onClose={props.onClose}
@@ -30,14 +31,17 @@ function RegisterForm(props) {
         onChange={props.handleFormChange}
         required
       />
-      <span id="email-error" className="form__field form__field_error">{props.errors['email']?.substring(0, 50)}</span>
+      <span
+        id="email-error"
+        className={`form__error ${props.errors.email ? "form__error_active" : ""}`}
+      >
+        {props.errors.email}
+      </span>
 
       <label className="form__label">Password</label>
       <input
         id="password-register"
         type="password"
-        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$" //at least 1 uppercase, 1 lowercase, 1 number
-        title="Please include at least 1 uppercase character, 1 lowercase character, and 1 number."
         name="password"
         placeholder="Enter Password"
         className="form__input form__input_type_password"
@@ -46,21 +50,31 @@ function RegisterForm(props) {
         minLength={6}
         required
       />
-      <span id="password-error" className="form__field form__field_error">{props.errors['password']?.substring(0, 50)}</span>
+      <span
+        id="password-error"
+        className={`form__error ${props.errors.password ? "form__error_active" : ""}`}
+      >
+        {props.errors.password}
+      </span>
 
       <label className="form__label">Username</label>
       <input
         id="username"
         type="text"
-        name="username"
+        name="name"
         placeholder="Enter your username"
         className="form__input form__input_type_username"
-        value={props.values.username}
+        value={props.values.name}
         onChange={props.handleFormChange}
         minLength={4}
         required
       />
-      <span id="username-error" className="form__field form__field_error">{props.errors['username']?.substring(0, 50)}</span>
+      <span
+        id="username-error"
+        className={`form__error ${props.errors.name ? "form__error_active" : ""}`}
+      >
+        {props.errors.name}
+      </span>
 
       <span id="register-error" className="register__form_error">{props.duplicateUser && 'Email is already taken'}</span>
     </PopupWithForm>

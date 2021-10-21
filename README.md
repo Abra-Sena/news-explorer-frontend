@@ -1,5 +1,8 @@
 TO DOs:
-* styling
+* Style cards list to have 3/row on all resolutions  --> DONE
+* Style card: delete space between photo and details section --> DONE
+* Show Form validation errors
+* Check if all best practice fron trello were implemented
 * Test everything on remote server
 
 # Getting Started with Create React App

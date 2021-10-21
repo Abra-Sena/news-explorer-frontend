@@ -1,5 +1,5 @@
 // description of the requests to newsapi.org
-import { apiKey } from "./Constants";
+import { API_KEY } from "./Constants";
 
 const from = 7 * 24 * 60 * 60 * 1000;
 const today = new Date().toISOString();
@@ -10,7 +10,7 @@ export default class NewsApi {
   constructor({baseUrl, headers}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
-    this._apiKey = apiKey;
+    this._apiKey = API_KEY;
   }
 
   searchArticles(query) {

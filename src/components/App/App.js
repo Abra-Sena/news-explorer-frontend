@@ -13,8 +13,9 @@ import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
 import NewsApi from '../../utils/NewApi';
 import MainApi from '../../utils/MainApi';
+import FormValidation from '../../utils/FormValidation';
 import * as auth from '../../utils/auth';
-import { BASE_URL, BASE_NEWS_URL } from '../../utils/Constants';
+import { BASE_URL, BASE_NEWS_URL, COUNTER } from '../../utils/Constants';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './App.css';
@@ -39,8 +40,8 @@ function App() {
   const [isRegisterPopupOpen, setRegisterPopupOpen] = React.useState(false);
   const [isSuccessPopup, setSuccessPopup] = React.useState(false);
   // const [success, setSuccess] = React.useState(false);
-  const [articlesCount, setArticlesCount] = React.useState(3);
-  const [values, setValues] = React.useState({email: '', password: '', username: ''});
+  const [articlesCount, setArticlesCount] = React.useState(COUNTER);
+  const [values, setValues] = React.useState({email: '', password: '', name: ''});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
   const mainApi = new MainApi({
@@ -59,8 +60,8 @@ function App() {
   });
   const handleFormReset = React.useCallback(
     (
-      newValues = {email: '', password: '', username: ''},
-      newErrors = {email: '', password: '', username: ''},
+      newValues = {email: '', password: '', name: ''},
+      newErrors = {email: '', password: '', name: ''},
       newIsValid = false
     ) => {
       setValues(newValues);
@@ -70,27 +71,18 @@ function App() {
     [setValues, setErrors, setIsValid]
   );
 
-  function inputsValidation() {
-    const formText = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-
-    setErrors((state) => ({
-      ...state,
-      email: formText.test(values.email) ? "" : "Please enter a valid email!"
-    }));
-  }
-
  function handleFormChange(evt) {
    const {name, value} = evt.target
    const newValues = { ...values, [name]: value }
 
     setValues(newValues);
-    inputsValidation(newValues);
+    FormValidation(errors, newValues, name)
     setErrors({...errors, [name]: errors[name] });
     setIsValid(evt.target.closest('form').checkValidity());
   }
 
-  function formSwitch(e) {
-    e.preventDefault();
+  function formSwitch(evt) {
+    evt.preventDefault();
     handleFormReset()
 
     if(isRegisterPopupOpen) {
@@ -111,10 +103,10 @@ function App() {
     setLoginPopupOpen(false);
     setWrongInputs(false);
   }
-  function handleRegister(e) {
-    e.preventDefault();
+  function handleRegister(evt) {
+    evt.preventDefault();
 
-    auth.register(values.email, values.password, values.username)
+    auth.register(values.email, values.password, values.name)
       .then((res) => {
         if(res.status === 409) {
           setDuplicateUser(true);
@@ -124,15 +116,16 @@ function App() {
         if(res.ok) return res.json();
       })
       .then(() => {
+        setDuplicateUser(false);
         setIsValid(true);
-        setSuccessPopup(true);
         setRegisterPopupOpen(false);
         setLoginPopupOpen(false);
-        setDuplicateUser(false);
+        setSuccessPopup(true);
         handleFormReset();
       })
       .catch((err) => {
         console.log(err);
+        setErrors(errors)
         setServerError(err.validation ? err.validation.body.message : 'Email is already taken') // needed ?
       });
   }
@@ -143,8 +136,8 @@ function App() {
     setRegisterPopupOpen(false);
     setSuccessPopup(false);
   }
-  function handleLogin(e) {
-    e.preventDefault();
+  function handleLogin(evt) {
+    evt.preventDefault();
 
     auth.authorize(values.email, values.password)
       .then((res) => {
@@ -168,6 +161,7 @@ function App() {
           localStorage.setItem('jwt', data.token);
           setCurrentUser({ email: data.email, name: data.username });
           setIsLoggedIn(true);
+          setIsValid(true);
         }
       })
       .then(() => {
@@ -197,8 +191,8 @@ function App() {
 
     setCards(newCards.forEach((c) => { c.isSaved = false }));
   }
-  function handleSearchSubmit(e) {
-    e.preventDefault();
+  function handleSearchSubmit(evt) {
+    evt.preventDefault();
 
     setIsLoading(true);
 
@@ -224,7 +218,7 @@ function App() {
         return res;
       })
       .then((data) => {
-        setArticlesCount(3);
+        setArticlesCount(COUNTER);
         setCards(data);
       })
       .catch((err) => {
@@ -313,7 +307,7 @@ function App() {
   }
 
   function showMoreCards() {
-    setArticlesCount(articlesCount + 3);
+    setArticlesCount(articlesCount + COUNTER);
   }
 
   function getSavedArticles() {

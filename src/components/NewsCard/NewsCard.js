@@ -63,20 +63,19 @@ function NewsCard(props) {
         />
       </div>
 
-
       <img
         className="element__photo"
         src={props.article.urlToImage === null ? imageNotFound : props.article.urlToImage}
         alt={props.article.title}
       />
-      <div className="element__details">
+      <a className="element__details" href={props.article.url} target="blank">
         <p className="element__date">{convertDate(props.article.publishedAt)}</p>
-        <a className="element__title" href={props.article.url} target="blank">{props.article.title}</a>
-        <p className="element__paragraph">{props.article.description}</p>
-        <p className="element__keyword">
+        <h4 className="element__title">{props.article.title}</h4>
+        <p className="element__description">{props.article.description}</p>
+        <p className="element__source">
           { props.savedNews ? props.article.source : props.article.source.name }
         </p>
-      </div>
+      </a>
     </li>
   )
 }
