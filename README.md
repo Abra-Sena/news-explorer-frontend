@@ -1,43 +1,53 @@
-TO DOs:
-* Style cards list to have 3/row on all resolutions  --> DONE
-* Style card: delete space between photo and details section --> DONE
-* Show Form validation errors
-* Check if all best practice fron trello were implemented
-* Test everything on remote server
+# News Explorer
 
-# Getting Started with Create React App
+A website where users can search for news articles and save them to their profiles.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Features
+This website has two main features:
+  - When the user enters a keyword in the search bar, the website send a request to the News API service, find all the relevant articles over the last week, and display a list of cards for each of them.
+  - It displays all articles saved by a user in the *Saved articles* section of the website.
+
+
+## Front-End
+The front end of the website consists of two pages:
+  - The main page with a search box
+  - The page with saved news items where all the liked materials are displayed
+Additionally, the website has two popup windows:
+ - A registration form
+ - A login form
+Each page has identical blocks that are reused in different parts of the website. Using React, we created reusable components and style them according to BEM specifications.
+
+
+## Back-End
+In this project, we work with two APIs:
+  - [The News API](https://newsapi.org), which returns JSON data containing headlines, bylines and other data from keyword searches.
+  - An API for user authentication and saving articles created independently.
+
+## The Infrastructure
+  - Git: for storing the project in a public repository
+  - Create React App: to create a template for the front end.
+  - Trello: project's decomposition using Agile methodology
+
+
+## Problem encountered
+  - **News API** 
+The project requested to retreive articles from NewsAPI once user entered a search word, but the free Developer account only allows search for development and testing purposes. That makes it impossible to get news on the frontend using our domainame, but return the below message instead: 
+> "Requests from the browser are not allowed on the Developer plan, except from localhost."
+In other to allow user to retrieve data, we look for alternatives by referring to APIs available [here](https://github.com/public-apis/public-apis). [TheNewsAPI](https://www.thenewsapi.com) will be used in replacement in the future.
+
 
 ## Available Scripts
-
 In the project directory, you can run:
 
 ### `npm start`
-
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
 ### `npm run build`
-
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Deployment: `npm run deploy`
 
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

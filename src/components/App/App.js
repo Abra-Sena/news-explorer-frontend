@@ -126,7 +126,7 @@ function App() {
       .catch((err) => {
         console.log(err);
         setErrors(errors)
-        setServerError(err.validation ? err.validation.body.message : 'Email is already taken') // needed ?
+        // setServerError(err.validation ? err.validation.body.message : 'Email is already taken') // needed ?
       });
   }
 
