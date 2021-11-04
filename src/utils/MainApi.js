@@ -1,5 +1,5 @@
 // description to request to  my API
-import { BASE_URL, checkResult, token } from "./Constants";
+import { BASE_URL, checkResult } from "./Constants";
 
 class MainApi {
   constructor({baseUrl, headers}) {
@@ -47,7 +47,7 @@ const mainApi = new MainApi({
   headers: {
     "Accept": "application/json",
     "Content-Type": "application/json",
-    authorization: `Bearer ${token}`
+    authorization: `Bearer ${localStorage.getItem('jwt')}`
   }
 });
 
