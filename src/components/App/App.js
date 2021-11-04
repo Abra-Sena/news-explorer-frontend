@@ -11,11 +11,11 @@ import SavedNews from "../SavedNews/SavedNews";
 import Navigation from '../Navigation/Navigation';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import NewsApi from '../../utils/NewApi';
-import MainApi from '../../utils/MainApi';
 import FormValidation from '../../utils/FormValidation';
 import * as auth from '../../utils/auth';
-import { BASE_URL, BASE_NEWS_URL, COUNTER } from '../../utils/Constants';
+import newsApi from '../../utils/NewApi';
+import mainApi from '../../utils/MainApi';
+import { COUNTER } from '../../utils/Constants';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './App.css';
@@ -39,25 +39,12 @@ function App() {
   const [isLoginPopupOpen, setLoginPopupOpen] = React.useState(false);
   const [isRegisterPopupOpen, setRegisterPopupOpen] = React.useState(false);
   const [isSuccessPopup, setSuccessPopup] = React.useState(false);
-  // const [success, setSuccess] = React.useState(false);
   const [articlesCount, setArticlesCount] = React.useState(COUNTER);
   const [values, setValues] = React.useState({email: '', password: '', name: ''});
   const [errors, setErrors] = React.useState({});
   const [isValid, setIsValid] = React.useState(false);
-  const mainApi = new MainApi({
-    baseUrl: BASE_URL,
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`
-    }
-  });
-  const newsApi = new NewsApi({
-    baseUrl: BASE_NEWS_URL,
-    headers: {
-      "Content-Type": "application/json",
-    }
-  });
+  const [fetching, setFetching] = React.useState(false);
+
   const handleFormReset = React.useCallback(
     (
       newValues = {email: '', password: '', name: ''},
@@ -105,17 +92,21 @@ function App() {
   }
   function handleRegister(evt) {
     evt.preventDefault();
+    setFetching(true);
 
     auth.register(values.email, values.password, values.name)
       .then((res) => {
         if(res.status === 409) {
+          setIsValid(false);
           setDuplicateUser(true);
+          // setErrors({email: 'This Email is already taken!', password: '', name: ''});
           return Promise.reject(`Error! ${res.statusText}`);
         }
 
         if(res.ok) return res.json();
       })
       .then(() => {
+        setFetching(false);
         setDuplicateUser(false);
         setIsValid(true);
         setRegisterPopupOpen(false);
@@ -126,7 +117,6 @@ function App() {
       .catch((err) => {
         console.log(err);
         setErrors(errors)
-        // setServerError(err.validation ? err.validation.body.message : 'Email is already taken') // needed ?
       });
   }
 
@@ -138,6 +128,7 @@ function App() {
   }
   function handleLogin(evt) {
     evt.preventDefault();
+    setFetching(true);
 
     auth.authorize(values.email, values.password)
       .then((res) => {
@@ -151,6 +142,7 @@ function App() {
         return Promise.reject(`Error! ${res.statusText}`);
       })
       .then((data) => {
+        setFetching(false);
         setWrongInputs(false);
         if(data.token) return data;
         return;
@@ -193,7 +185,7 @@ function App() {
   }
   function handleSearchSubmit(evt) {
     evt.preventDefault();
-
+    setFetching(true);
     setIsLoading(true);
 
     if(searchRequest.length === 0) {
@@ -201,7 +193,6 @@ function App() {
       setServerError('Please enter a word to search');
       return;
     }
-    console.log('topic/keyword: ', searchRequest)
 
     newsApi.searchArticles(searchRequest)
       .then((res) => {
@@ -218,6 +209,7 @@ function App() {
         return res;
       })
       .then((data) => {
+        setFetching(false);
         setArticlesCount(COUNTER);
         setCards(data);
       })
@@ -396,28 +388,34 @@ function App() {
         values={values}
         errors={errors}
         isValid={isValid}
+        fetching={fetching}
         wrongInputs={wrongInputs}
         isOpen={isRegisterPopupOpen}
         onClose={handlePopupClose}
-        handleRegister={handleRegister}
         onSwitch={formSwitch}
+        closeAllPopups={closeAllPopups}
+        handleRegister={handleRegister}
         handleFormChange={handleFormChange}
       />
       <LoginForm
         values={values}
         errors={errors}
         isValid={isValid}
+        fetching={fetching}
         wrongInputs={wrongInputs}
         isOpen={isLoginPopupOpen}
         onClose={handlePopupClose}
         handleLogin={handleLogin}
         onSwitch={formSwitch}
+        closeAllPopups={closeAllPopups}
+
         handleFormChange={handleFormChange}
       />
       <InfoPopup
         isOpen={isSuccessPopup}
         onClose={handlePopupClose}
         onSwitch={formSwitch}
+        closeAllPopups={closeAllPopups}
       />
     </CurrentUserContext.Provider>
   );

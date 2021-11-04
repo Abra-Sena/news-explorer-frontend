@@ -11,11 +11,13 @@ function LoginForm(props) {
       name="login"
       title="Sign in"
       errors={props.errors}
+      fetching={props.fetching}
       isOpen={props.isOpen}
       isValid={props.isValid}
       onSubmit={props.handleLogin}
       onClose={props.onClose}
       onSwitch={props.onSwitch}
+      closeAllPopups={props.closeAllPopups}
     >
       <label className="form__label">Email</label>
       <input
@@ -24,6 +26,7 @@ function LoginForm(props) {
         name="email"
         className="form__input form__input_type_email"
         placeholder="Enter Email"
+        disabled={props.fetching}
         value={props.values.email}
         onChange={props.handleFormChange}
         required
@@ -42,6 +45,7 @@ function LoginForm(props) {
         name="password"
         className="form__input form__input_type_password"
         placeholder="Enter Password"
+        disabled={props.fetching}
         value={props.values.password}
         onChange={props.handleFormChange}
         required
@@ -53,7 +57,7 @@ function LoginForm(props) {
         {props.errors.password}
       </span>
 
-      <span id="login-error" className={`form__error ${props.errors ? "form__error_active" : ""} login__form_error`}>
+      <span id="login-error" className={`form__error form__error_server ${props.errors ? "form__error_active" : ""}`}>
         {props.wrongInputs && 'Email or Password Invalid!'}
       </span>
     </PopupWithForm>

@@ -2,7 +2,7 @@
 import './SearchForm.css';
 
 function SearchForm(props) {
-  const buttonClick = () => {
+  const buttonClick = function () {
     document.querySelector('.search__button').style.background = "#2A65CC";
   }
 

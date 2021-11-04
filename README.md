@@ -1,6 +1,7 @@
 # News Explorer
 
-A website where users can search for news articles and save them to their profiles.
+A [website](https://abra-newsapp.students.nomoreparties.site/) where users can search for news articles and save them to their profiles.
+This repository contains the frontend built with React.js and Node.js.
 
 
 ## Features
@@ -9,7 +10,7 @@ This website has two main features:
   - It displays all articles saved by a user in the *Saved articles* section of the website.
 
 
-## Front-End
+## Frontend
 The front end of the website consists of two pages:
   - The main page with a search box
   - The page with saved news items where all the liked materials are displayed
@@ -19,7 +20,7 @@ Additionally, the website has two popup windows:
 Each page has identical blocks that are reused in different parts of the website. Using React, we created reusable components and style them according to BEM specifications.
 
 
-## Back-End
+## Backend
 In this project, we work with two APIs:
   - [The News API](https://newsapi.org), which returns JSON data containing headlines, bylines and other data from keyword searches.
   - An API for user authentication and saving articles created independently.
@@ -41,13 +42,11 @@ In other to allow user to retrieve data, we look for alternatives by referring t
 In the project directory, you can run:
 
 ### `npm start`
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the app in the development mode with backend on Port 3000 and frontend at Port 3001.
 
 ### `npm run build`
 Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-### Deployment: `npm run deploy`
-
+### `npm run deploy`
+Deploys frontend, build and copy files directly to the VM to update code after refactor/correction.
 

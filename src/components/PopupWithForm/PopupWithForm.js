@@ -7,7 +7,7 @@ function PopupWithForm(props) {
   const linkText = props.title === "Sign in" ? " Sign up" : " Sign in";
 
   function handleEscKey(evt) {
-    if(evt.which === 27) props.onClose();
+    if(evt.which === 27) props.closeAllPopups();
   }
 
 
@@ -48,6 +48,7 @@ function PopupWithForm(props) {
                   type="submit"
                   aria-label="auth"
                   onClick={props.onSubmit}
+                  disabled={props.fetching}
                   className={props.isValid ? 'form__submit' : 'form__submit form__submit_disabled'}
                 >
                   {props.title}

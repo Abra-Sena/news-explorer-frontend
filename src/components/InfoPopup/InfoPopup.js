@@ -11,6 +11,7 @@ function InfoPopup(props) {
       isOpen={props.isOpen}
       onClose={props.onClose}
       onSwitch={props.onSwitch}
+      closeAllPopups={props.closeAllPopups}
     >
       <button className="form__link form__link-success" onClick={props.onSwitch}>Sign in</button>
     </PopupWithForm>

@@ -1,4 +1,5 @@
 import { EMAIL_PATTERN, PASS_PATTERN } from "./Constants";
+
 export default function FormValidation(errors, values) {
   const checkEmail = new RegExp(EMAIL_PATTERN).test(values.email);
   const checkPassword = PASS_PATTERN.test(values.password);

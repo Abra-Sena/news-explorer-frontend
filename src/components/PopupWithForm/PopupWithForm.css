@@ -87,6 +87,12 @@
   /* outline: none; */
 }
 
+.form__error_server {
+  margin: 18px auto 10px;
+  font-size: 2vh;
+  text-align: center;
+}
+
 .form__error_active {
   color: #FF0000;
 }

@@ -5,20 +5,19 @@ import PopupWithForm from '../PopupWithForm/PopupWithForm';
 import './RegisterForm.css';
 
 function RegisterForm(props) {
-  // const errorMessage = props.duplicateUser ? 'Email is already taken' : 'Email or Password Invalid!';
-
-
   return (
     <PopupWithForm
       id="register"
       name="register"
       title="Sign up"
       errors={props.errors}
+      fetching={props.fetching}
       isOpen={props.isOpen}
       isValid={props.isValid}
       onClose={props.onClose}
       onSubmit={props.handleRegister}
       onSwitch={props.onSwitch}
+      closeAllPopups={props.closeAllPopups}
     >
       <label className="form__label">Email</label>
       <input
@@ -27,6 +26,7 @@ function RegisterForm(props) {
         name="email"
         className="form__input form__input_type_email"
         placeholder="Enter Email"
+        disabled={props.fetching}
         value={props.values.email}
         onChange={props.handleFormChange}
         required
@@ -45,6 +45,7 @@ function RegisterForm(props) {
         name="password"
         placeholder="Enter Password"
         className="form__input form__input_type_password"
+        disabled={props.fetching}
         value={props.values.password}
         onChange={props.handleFormChange}
         minLength={6}
@@ -64,6 +65,7 @@ function RegisterForm(props) {
         name="name"
         placeholder="Enter your username"
         className="form__input form__input_type_username"
+        disabled={props.fetching}
         value={props.values.name}
         onChange={props.handleFormChange}
         minLength={4}
@@ -76,7 +78,9 @@ function RegisterForm(props) {
         {props.errors.name}
       </span>
 
-      <span id="register-error" className="register__form_error">{props.duplicateUser && 'Email is already taken'}</span>
+      <span id="register-error" className={`form__error form__error_server ${props.errors ? "form__error_active" : ""}`}>
+        {props.duplicateUser && "This Email is already taken!"}
+      </span>
     </PopupWithForm>
   )
 }

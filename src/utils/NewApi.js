@@ -1,12 +1,12 @@
 // description of the requests to newsapi.org
-import { API_KEY } from "./Constants";
+import { API_KEY, BASE_NEWS_URL, checkResult } from "./Constants";
 
 const from = 7 * 24 * 60 * 60 * 1000;
 const today = new Date().toISOString();
 // returns the date 7 days prior to the current date
 const aWeek = new Date(Date.now() - from).toISOString();
 
-export default class NewsApi {
+class NewsApi {
   constructor({baseUrl, headers}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
@@ -22,7 +22,17 @@ export default class NewsApi {
         &apiKey=${this._apiKey}
       `
     )
-      .then((res) => res.ok ? res.json() : Promise.reject(`Error! ${res.status}`))
+      .then((res) => checkResult(res))
       .then((res) => res.articles);
   }
 }
+
+const newsApi = new NewsApi({
+  baseUrl: BASE_NEWS_URL,
+  headers: {
+    "Content-Type": "application/json",
+  }
+});
+
+
+export default newsApi;

@@ -33,11 +33,11 @@ function Navigation(props) {
       ? isMobileNavOpen ? 'rgba(0, 0, 0, 0.5)' : ''
       : props.savedNews ? '#FFFFFF' : 'rgba(196, 196, 196, 0.01)'
   )
-  const handleMobileNav = () => {
+  const handleMobileNav = function () {
     console.log('request to open mobile nav');
     setMobileNavOpen(true);
   }
-  const closeMobileNav = (evt) => {
+  const closeMobileNav = function (evt) {
     if(screenWidth < 700) {
       console.log('request to close mobile nav');
 
@@ -48,7 +48,7 @@ function Navigation(props) {
     }
   }
 
-  const openSavedNewsPage = () => {
+  const openSavedNewsPage = function () {
     if(!props.savedNews && !props.isLoggedIn) props.handleLoginClick();
   }
 

@@ -1,6 +1,7 @@
 // description to request to  my API
+import { BASE_URL, checkResult, token } from "./Constants";
 
-export default class MainApi {
+class MainApi {
   constructor({baseUrl, headers}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
@@ -11,7 +12,7 @@ export default class MainApi {
       method: "GET",
       headers: this._headers
     })
-    .then((res) => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+    .then(res => checkResult(res))
     .then((results) => results.data)
   }
 
@@ -20,7 +21,7 @@ export default class MainApi {
       method: "GET",
       headers: this._headers
     })
-    .then(res => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+    .then(res => checkResult(res))
   }
 
   saveArticle(article) {
@@ -29,7 +30,7 @@ export default class MainApi {
       headers: this._headers,
       body: JSON.stringify(article)
     })
-    .then((res) => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+    .then(res => checkResult(res))
   }
 
   deleteArticle(articleId) {
@@ -37,6 +38,18 @@ export default class MainApi {
       method: "DELETE",
       headers: this._headers
     })
-    .then(res => res.ok ? res.json() : Promise.reject(`Error! ${res.statusText}`))
+    .then(res => checkResult(res))
   }
 }
+
+const mainApi = new MainApi({
+  baseUrl: BASE_URL,
+  headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    authorization: `Bearer ${token}`
+  }
+});
+
+
+export default mainApi;

@@ -1,7 +1,7 @@
 // authentication
 import { BASE_URL } from "./Constants";
 
-export const register = (email, password, name) => {
+export const register = function (email, password, name) {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
@@ -12,7 +12,7 @@ export const register = (email, password, name) => {
   })
 }
 
-export const authorize = (email, password) => {
+export const authorize = function (email, password) {
   return fetch(`${BASE_URL}/signin`, {
     method: "POST",
     headers: {
