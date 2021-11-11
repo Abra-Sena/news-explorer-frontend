@@ -5,37 +5,20 @@ import PopupWithForm from '../PopupWithForm/PopupWithForm';
 import './LoginForm.css';
 
 function LoginForm(props) {
-  const [ email, setEmail ] = React.useState('');
-  const [ password, setPassword ] = React.useState('');
-
-  // const history = useHistory();
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    // console.log("username: " + email, "password: " + password);
-    // props.handleLogin(email, password);
-    // if(localStorage.getItem('jwt')) {
-    //   history.push('/');
-    // }
-  }
-
-
   return (
     <PopupWithForm
       id="login"
       name="login"
-      title="in"
-      isOpen={props.isLoginPopupOpen}
+      title="Sign in"
+      errors={props.errors}
+      fetching={props.fetching}
+      isOpen={props.isOpen}
+      isValid={props.isValid}
+      onSubmit={props.handleLogin}
       onClose={props.onClose}
-      onSubmit={handleSubmit}
+      onSwitch={props.onSwitch}
       closeAllPopups={props.closeAllPopups}
-      switch={props.switch}
     >
-      <span id="login-error" className=" login__form_error">
-        {props.wrongInputs && 'Email or Password Invalid!'}
-      </span>
-
       <label className="form__label">Email</label>
       <input
         id="email-login"
@@ -43,11 +26,17 @@ function LoginForm(props) {
         name="email"
         className="form__input form__input_type_email"
         placeholder="Enter Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
+        disabled={props.fetching}
+        value={props.values.email}
+        onChange={props.handleFormChange}
         required
       />
-      <span id="email-error" className="form__field form__field_error"></span>
+      <span
+        id="email-error"
+        className={`form__error ${props.errors.email ? "form__error_active" : ""}`}
+      >
+        {props.errors.email}
+      </span>
 
       <label className="form__label">Password</label>
       <input
@@ -56,12 +45,21 @@ function LoginForm(props) {
         name="password"
         className="form__input form__input_type_password"
         placeholder="Enter Password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
+        disabled={props.fetching}
+        value={props.values.password}
+        onChange={props.handleFormChange}
         required
       />
-      <span id="password-error" className="form__field form__field_error"></span>
+      <span
+        id="password-error"
+        className={`form__error ${props.errors.password ? "form__error_active" : ""}`}
+      >
+        {props.errors.password}
+      </span>
 
+      <span id="login-error" className={`form__error form__error_server ${props.errors ? "form__error_active" : ""}`}>
+        {props.wrongInputs && 'Email or Password Invalid!'}
+      </span>
     </PopupWithForm>
   )
 }

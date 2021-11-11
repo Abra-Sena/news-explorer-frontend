@@ -1,45 +1,48 @@
 // the page with saved cards
-import React from 'react';
-import Navigation from '../Navigation/Navigation';
 import NewsCardList from '../NewsCardList/NewsCardList';
-// import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-
+import { COUNTER } from '../../utils/Constants';
 import './SavedNews.css';
 
 function SavedNews(props) {
-  // const currentUser = React.useContext(CurrentUserContext);
+  function articlesKeywords() {
+    const savedKeywords = [...new Set(props.cards.map(({keyword}) => keyword))];
+    const [first, second] = savedKeywords;
+    const { length } = savedKeywords;
+
+    return length > COUNTER ? `${first}, ${second}, and ${length - 2} others` : savedKeywords.join(', ');
+  }
+
 
   return(
     <main className="content">
-      <Navigation
-        isLoggedIn={props.isLoggedIn}
-        setIsLoggedIn={props.isLoggedIn}
-        setCurrentUser={props.setCurrentUser}
-        handlePopupSwitch={props.handlePopupSwitch}
-        handleLoginClick={props.handleLoginClick}
-        handleRegisterClick={props.handleRegisterClick}
-        handleEscKey={props.handleEscKey}
-        handleSignOut={props.handleSignOut}
-      />
-
       <section className="savednews">
         <div className="savednews__content">
           <span className="savednews__highlight">Saved articles</span>
           <h2 className="savednews__title">
-            {/* { currentUser + ", you have '" + props.cardCount + "' saved articles"} */}
-            {"Abravi, you have 5 saved articles"}
+            {props.currentUser.name}, you have {props.cards.length} saved articles.
           </h2>
-          <span className="savednews__keywords">By keywords:
-            <b>{ " Nature, Yellowstone, and 2 other" }</b>
-          </span>
+          { props.cards.length > 0 && <span className="savednews__keywords">
+              By keywords: <b>{articlesKeywords()}</b>
+            </span>
+          }
         </div>
 
-        <div className="elements saved__articles">
-          <NewsCardList />
-        </div>
+        {
+          props.cards.length > 0
+          ? <div className="elements saved__articles">
+              <NewsCardList
+                articles={props.cards}
+                searchRequest={props.searchRequest}
+                isLoggedIn={props.isLoggedIn}
+                savedNews={props.savedNews}
+                bookMarkClick={props.bookMarkClick}
+              />
+            </div>
+          : null
+        }
+
       </section>
     </main>
-
   )
 }
 

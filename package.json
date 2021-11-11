@@ -15,7 +15,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "dev": "PORT=3001 react-scripts start",
     "build": "react-scripts build",
+    "deploy": "npm run build && scp -r ./build/* emiline@abra-newsapp.students.nomoreparties.site:/home/emiline/frontend",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

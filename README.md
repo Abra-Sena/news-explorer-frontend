@@ -1,70 +1,52 @@
-# Getting Started with Create React App
+# News Explorer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A [website](https://abra-newsapp.students.nomoreparties.site/) where users can search for news articles and save them to their profiles.
+This repository contains the frontend built with React.js and Node.js.
+
+
+## Features
+This website has two main features:
+  - When the user enters a keyword in the search bar, the website send a request to the News API service, find all the relevant articles over the last week, and display a list of cards for each of them.
+  - It displays all articles saved by a user in the *Saved articles* section of the website.
+
+
+## Frontend
+The front end of the website consists of two pages:
+  - The main page with a search box
+  - The page with saved news items where all the liked materials are displayed
+Additionally, the website has two popup windows:
+ - A registration form
+ - A login form
+Each page has identical blocks that are reused in different parts of the website. Using React, we created reusable components and style them according to BEM specifications.
+
+
+## Backend
+In this project, we work with two APIs:
+  - [The News API](https://newsapi.org), which returns JSON data containing headlines, bylines and other data from keyword searches.
+  - An API for user authentication and saving articles created independently.
+
+## The Infrastructure
+  - Git: for storing the project in a public repository
+  - Create React App: to create a template for the front end.
+  - Trello: project's decomposition using Agile methodology
+
+
+## Problem encountered
+  - **News API** 
+The project requested to retreive articles from NewsAPI once user entered a search word, but the free Developer account only allows search for development and testing purposes. That makes it impossible to get news on the frontend using our domainame, but return the below message instead: 
+> "Requests from the browser are not allowed on the Developer plan, except from localhost."
+In other to allow user to retrieve data, we look for alternatives by referring to APIs available [here](https://github.com/public-apis/public-apis). [TheNewsAPI](https://www.thenewsapi.com) will be used in replacement in the future.
+
 
 ## Available Scripts
-
 In the project directory, you can run:
 
 ### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the app in the development mode with backend on Port 3000 and frontend at Port 3001.
 
 ### `npm run build`
+Builds the app for production to the `build` folder.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### `npm run deploy`
+Deploys frontend, build and copy files directly to the VM to update code after refactor/correction.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

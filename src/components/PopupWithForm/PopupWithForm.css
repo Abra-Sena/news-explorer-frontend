@@ -69,23 +69,33 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  margin-bottom: 22px;
   padding: 0;
 
   border: 0;
 }
 
-/* .form__field_error {
+.form__error {
+  margin: 5px 0 0;
+  padding: 0;
+
+  font-family: 'Inter', 'Arial', sans-serif;
+  font-style: normal;
+  font-weight: normal;
   font-size: 12px;
   line-height: 15px;
 
-  content: 'invalid email';
-  margin: 0;
-  padding: 0;
+  /* outline: none; */
+}
 
+.form__error_server {
+  margin: 18px auto 10px;
+  font-size: 2vh;
+  text-align: center;
+}
+
+.form__error_active {
   color: #FF0000;
-  outline: none;
-} */
+}
 
 .form__input {
   width: 100%;
@@ -93,6 +103,7 @@
   padding-bottom: 8px;
 
   font-family: 'Inter', 'Arial', sans-serif;
+  font-style: normal;
   font-weight: normal;
   font-size: 14px;
   line-height: 17px;
@@ -136,13 +147,13 @@
 
 .form__submit {
   height: 64px;
-  margin: 23px 0 16px;
+  margin: 16px 0;
   padding: 0;
 
   font-family: 'Roboto', 'Arial', sans-serif;
   font-style: normal;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 2vh;
   line-height: 133%;
   text-align: center;
 
@@ -214,13 +225,9 @@
     padding: 0 36px;
   }
 
-  .form__submit {
-    margin-top: 40px;
-  }
-
   .form__close {
-    right: -10%;
-    top: -12%;
+    right: -7%;
+    top: -7%;
     height: 40px;
     width: 40px;
   }

@@ -2,41 +2,49 @@
 // the components of the main page
 import React from 'react';
 import About from '../About/About';
-import Navigation from '../Navigation/Navigation';
 import NewsCardList from '../NewsCardList/NewsCardList';
 import NotFounded from '../NotFounded/NotFounded';
 import Preloader from '../Preloader/Preloader';
-// import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
 import './Main.css';
 
 function Main(props) {
-  // const currentUser = React.useContext(CurrentUserContext);
-
-
   return (
     <main className="content">
-      <Navigation
-        isLoggedIn={props.isLoggedIn}
-        setIsLoggedIn={props.isLoggedIn}
-        setCurrentUser={props.setCurrentUser}
-        handlePopupSwitch={props.handlePopupSwitch}
-        handleLoginClick={props.handleLoginClick}
-        handleRegisterClick={props.handleRegisterClick}
-        handleEscKey={props.handleEscKey}
-        handleSignoutClick={props.handleSignoutClick}
-      />
-
-
       <section className="search">
-        {/* <NotFounded /> */}
-
-        {/* <Preloader /> */}
-
         <div className="elements">
-          <h2 className="elements__title">Search results</h2>
-          <NewsCardList />
-          <button className="elements__more">Show more</button>
+
+          { (props.searchRequest && props.isServerError) &&
+            <>
+              <h2 className="elements__title">Search results</h2>
+              <p className="search__error">{props.isServerError}</p>
+            </>
+          }
+
+          {/* { props.isLoading && <Preloader /> }
+          { (props.notFound || props.cards?.length < 0) && <NotFounded /> } */}
+
+          { props.cards?.length > 0
+            ?
+              <>
+                <h2 className="elements__title">Search results</h2>
+                <NewsCardList
+                  articles={props.cards}
+                  articlesCount={props.articlesCount}
+                  searchRequest={props.searchRequest}
+                  isLoggedIn={props.isLoggedIn}
+                  bookMarkClick={props.bookMarkClick}
+                  savedNews={props.savedNews}
+                />
+
+                { props.articlesCount < props.cards?.length &&
+                  (<button className="elements__more" onClick={props.showMoreCards}>Show more</button>)
+                }
+              </>
+            // : null
+            : props.isLoading ? <Preloader />
+              : (props.notFound || props.cards?.length < 0) ? <NotFounded /> : null
+          }
         </div>
       </section>
 

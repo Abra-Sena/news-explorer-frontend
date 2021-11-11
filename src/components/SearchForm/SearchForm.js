@@ -1,33 +1,19 @@
 // the search form for the user to enter their search request
-import { useState } from 'react';
 import './SearchForm.css';
 
-function SearchForm() {
-  const [searchRequest, setSearchRequest] = useState('');
-  const buttonClick = () => {
+function SearchForm(props) {
+  const buttonClick = function () {
     document.querySelector('.search__button').style.background = "#2A65CC";
   }
 
-  function handleSearchSubmit(evt) {
-    evt.preventDefault();
-
-    return setSearchRequest('');
-  }
-
-  function handleSearchChange(evt) {
-    evt.preventDefault();
-
-    return setSearchRequest(evt.target.value);
-  }
-
   return (
-    <form className="search__form" onSubmit={handleSearchSubmit} noValidate>
+    <form className="search__form" onSubmit={props.handleSearchSubmit} noValidate>
       <input
         type="text"
         name="search"
-        value={searchRequest}
         placeholder="Enter topic"
-        onChange={handleSearchChange}
+        value={props.searchRequest ? props.searchRequest : ''} // this fix having false on page refresh
+        onChange={props.handleSearchChange}
         className="search__input"
         required
       />
