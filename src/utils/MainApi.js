@@ -7,49 +7,57 @@ class MainApi {
     this._headers = headers;
   }
 
-  getUserInfo() {
+  _setHeaders(token) {
+    if(token !== '') {
+      return {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`
+      }
+    }
+
+    return {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  }
+
+  getUserInfo(token) {
     return fetch(`${this._baseUrl}/users/me`, {
       method: "GET",
-      headers: this._headers
+      headers: this._setHeaders(token)
     })
     .then(res => checkResult(res))
     .then((results) => results.data)
   }
 
-  getArticles() {
+  getArticles(token) {
     return fetch(`${this._baseUrl}/articles`, {
       method: "GET",
-      headers: this._headers
+      headers: this._setHeaders(token)
     })
     .then(res => checkResult(res))
   }
 
-  saveArticle(article) {
+  saveArticle(token, article) {
     return fetch(`${this._baseUrl}/articles`, {
       method: "POST",
-      headers: this._headers,
+      headers: this._setHeaders(token),
       body: JSON.stringify(article)
     })
     .then(res => checkResult(res))
   }
 
-  deleteArticle(articleId) {
+  deleteArticle(token, articleId) {
     return fetch(`${this._baseUrl}/articles/${articleId}`, {
       method: "DELETE",
-      headers: this._headers
+      headers: this._setHeaders(token)
     })
     .then(res => checkResult(res))
   }
 }
 
-const mainApi = new MainApi({
-  baseUrl: BASE_URL,
-  headers: {
-    "Accept": "application/json",
-    "Content-Type": "application/json",
-    authorization: `Bearer ${localStorage.getItem('jwt')}`
-  }
-});
+const mainApi = new MainApi({ baseUrl: BASE_URL });
 
 
 export default mainApi;

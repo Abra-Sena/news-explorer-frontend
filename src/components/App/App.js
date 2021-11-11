@@ -248,7 +248,7 @@ function App() {
     }
 
     if(isLoggedIn && !savedNews) {
-      mainApi.saveArticle({
+      mainApi.saveArticle(token, {
         keyword: card.keyword,
         title: card.title,
         description: card.description,
@@ -267,7 +267,7 @@ function App() {
 
   function handleDeleteClick(card) {
     card.isSaved = false;
-    mainApi.deleteArticle(card._id)
+    mainApi.deleteArticle(token, card._id)
     .then(() => {
       const newSavedArticles = savedArticles.filter((a) => a._id !== card._id);
 

@@ -45,7 +45,7 @@ In the project directory, you can run:
 Runs the app in the development mode with backend on Port 3000 and frontend at Port 3001.
 
 ### `npm run build`
-Builds the app for production to the `build` folder.\
+Builds the app for production to the `build` folder.
 
 ### `npm run deploy`
 Deploys frontend, build and copy files directly to the VM to update code after refactor/correction.
